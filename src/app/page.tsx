@@ -80,7 +80,7 @@ export default function Page(){
           <div className="flex items-center gap-2">
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-amber-400 text-stone-900 font-bold">A</span>
             <span className="font-semibold">Admonk Digital</span>
-            <Badge>Solo-first growth studio</Badge>
+            <Badge>Solo-first growth studio- live</Badge>
           </div>
           <div className="hidden md:flex items-center gap-6 text-sm">
             <a href="#services" className="hover:text-amber-300">Services</a>
