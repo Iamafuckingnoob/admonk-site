@@ -88,7 +88,7 @@ export default function Page(){
             <a href="#pricing" className="hover:text-amber-300">Pricing</a>
             <a href="#faq" className="hover:text-amber-300">FAQ</a>
             <a href="#contact" className="hover:text-amber-300">Contact</a>
-            <a className="inline-flex items-center gap-2 rounded-xl border border-emerald-400 bg-emerald-500/90 text-stone-900 px-4 py-2 text-sm" href="https://wa.me/919999999999" target="_blank" rel="noreferrer"><PhoneCall className="w-4 h-4"/> WhatsApp</a>
+            <a className="inline-flex items-center gap-2 rounded-xl border border-emerald-400 bg-emerald-500/90 text-stone-900 px-4 py-2 text-sm" href="https://wa.me/917087796662" target="_blank" rel="noreferrer"><PhoneCall className="w-4 h-4"/> WhatsApp</a>
           </div>
         </div>
       </nav>
@@ -144,8 +144,8 @@ export default function Page(){
 <Section className="py-12 bg-stone-950 text-stone-100">
   <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
     {[
-      { n: "100+", l: "Projects shipped" },
-      { n: "₹50L+", l: "Ad spend managed" },
+      { n: "24+", l: "Projects shipped" },
+      { n: "₹10L+", l: "Ad spend managed" },
       { n: "7 days", l: "Fastest launch" },
       { n: "98%", l: "Client satisfaction" },
     ].map((s, i) => (
@@ -327,9 +327,9 @@ export default function Page(){
             </div>
             <p className="text-stone-700 max-w-prose">Tell me about your business and the outcome you want next month. I’ll reply with a crisp plan and timeline.</p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Button asChild className="rounded-xl bg-emerald-700 hover:bg-emerald-800"><a href="https://cal.com/yourname/30min" target="_blank" rel="noreferrer">Schedule on Cal</a></Button>
-              <Button variant="outline" asChild className="rounded-xl border-stone-900 text-stone-900 hover:bg-stone-100"><a href="mailto:hello@admonk.digital">Email me</a></Button>
-              <Button variant="outline" asChild className="rounded-xl border-emerald-700 text-emerald-700 hover:bg-emerald-50"><a href="https://wa.me/919999999999" target="_blank" rel="noreferrer">WhatsApp</a></Button>
+              <Button asChild className="rounded-xl bg-emerald-700 hover:bg-emerald-800"><a href="https://cal.com/kanav-guglani/30min" target="_blank" rel="noreferrer">Schedule on Cal</a></Button>
+              <Button variant="outline" asChild className="rounded-xl border-stone-900 text-stone-900 hover:bg-stone-100"><a href="mailto:kanavguglaniofficial@gmail.com">Email me</a></Button>
+              <Button variant="outline" asChild className="rounded-xl border-emerald-700 text-emerald-700 hover:bg-emerald-50"><a href="https://wa.me/917087796662" target="_blank" rel="noreferrer">WhatsApp</a></Button>
             </div>
           </div>
           <Card className="rounded-2xl shadow-sm bg-white border border-stone-200">
@@ -338,14 +338,32 @@ export default function Page(){
               <CardDescription>Get a same-day response.</CardDescription>
             </CardHeader>
             <CardContent>
-              <form className="space-y-4" action="#" onSubmit={(e)=>e.preventDefault()}>
-                <Input placeholder="Your name" required />
-                <Input placeholder="Email or WhatsApp" required />
-                <Input placeholder="Business / Website (optional)" />
-                <Textarea placeholder="What do you need help with?" rows={5} required />
-                <Button type="submit" className="w-full rounded-xl bg-stone-900 hover:bg-stone-800">Send</Button>
-                <p className="text-xs text-stone-500">By submitting, you agree to be contacted about your project. No spam—ever.</p>
-              </form>
+              <form
+  className="space-y-4"
+  action="https://formspree.io/f/mkgvopln"
+  method="POST"
+>
+  {/* Honeypot to reduce spam */}
+  <input type="text" name="_gotcha" className="hidden" tabIndex={-1} autoComplete="off" />
+
+  {/* Optional: subject line in your Formspree dashboard */}
+  <input type="hidden" name="_subject" value="New project enquiry from website" />
+
+  {/* IMPORTANT: keep `name="email"` so Formspree sets reply-to */}
+  <Input name="name" placeholder="Your name" required />
+  <Input type="email" name="email" placeholder="Email" required />
+  <Input name="phone" placeholder="WhatsApp / Phone (optional)" />
+  <Textarea name="message" placeholder="What do you need help with?" rows={5} required />
+
+  <Button type="submit" className="w-full rounded-xl bg-stone-900 hover:bg-stone-800">
+    Send
+  </Button>
+
+  <p className="text-xs text-stone-500">
+    By submitting, you agree to be contacted about your project. No spam—ever.
+  </p>
+</form>
+
             </CardContent>
           </Card>
         </div>
