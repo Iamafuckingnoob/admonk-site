@@ -4,24 +4,6 @@
     <loc>https://admonk-digital-2025.vercel.app/</loc>
     <lastmod>2025-08-30T11:34:26.461Z</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>1</priority>
-  </url>
-  <url>
-    <loc>https://admonk-digital-2025.vercel.app/services</loc>
-    <lastmod>2025-08-30T11:34:26.461Z</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://admonk-digital-2025.vercel.app/about</loc>
-    <lastmod>2025-08-30T11:34:26.461Z</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://admonk-digital-2025.vercel.app/contact</loc>
-    <lastmod>2025-08-30T11:34:26.461Z</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
+    <priority>1.0</priority>
   </url>
 </urlset>
