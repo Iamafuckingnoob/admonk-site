@@ -118,7 +118,12 @@ export default function RootLayout({
     </Script>
   </>
 )}
+<Script id="ga-debug" strategy="afterInteractive">
+  {`console.log('[GA_ID]', '${GA_ID ?? 'MISSING'}')`}
+</Script>
 
+
+ 
       </body>
     </html>
   );
