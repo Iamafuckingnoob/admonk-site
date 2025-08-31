@@ -124,6 +124,36 @@ export default function RootLayout({
             </Script>
           </>
         )}
+        {/* DEBUG: print GA ID at runtime (so you can see it on Vercel) */}
+<Script id="ga-debug" strategy="afterInteractive">
+  {`console.log('[GA_ID]', '${process.env.NEXT_PUBLIC_GA_ID ?? 'MISSING'}')`}
+</Script>
+
+{/* GA4 — single block, no event handlers (RSC-safe) */}
+{process.env.NEXT_PUBLIC_GA_ID && (
+  <>
+    <Script
+      src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+      strategy="afterInteractive"
+    />
+    <Script id="ga-init" strategy="afterInteractive">
+      {`
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', { anonymize_ip: true, send_page_view: true });
+
+        // fire a quick test event so Network shows a 'collect' hit
+        setTimeout(() => {
+          if (typeof gtag === 'function') {
+            gtag('event', 'debug_test_ping', { debug_mode: true });
+          }
+        }, 800);
+      `}
+    </Script>
+  </>
+)}
+
       </body>
     </html>
   );
