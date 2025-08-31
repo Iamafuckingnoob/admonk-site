@@ -1,16 +1,17 @@
-"use client";
+'use client'
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { motion } from 'framer-motion'
 import {
   Activity, Rocket, Megaphone, ShoppingCart, Code, MessageSquare,
   Palette, Zap, Check, ChevronRight, PhoneCall, Calendar, Inbox, BarChart3
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useActiveSection } from "./hooks/useActiveSection";
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { useActiveSection } from './hooks/useActiveSection'
 
 /** EARTHY PALETTE (consistent): dark stone + emerald + amber + sand */
 
@@ -38,6 +39,7 @@ const faqs = [
   {q:"Where are you based?", a:"India (IST). Async with crisp updates."},
 ];
 
+// Re-usable section shell
 const Section = ({id,className="",children}:{id?:string,className?:string,children:React.ReactNode})=> (
   <section
     id={id}
@@ -46,7 +48,6 @@ const Section = ({id,className="",children}:{id?:string,className?:string,childr
     <div className="container mx-auto max-w-7xl px-4">{children}</div>
   </section>
 );
-
 
 const Badge = ({children}:{children:React.ReactNode})=> (
   <span className="inline-flex items-center rounded-full border border-amber-300 bg-amber-50 text-amber-900 px-3 py-1 text-xs font-medium">{children}</span>
@@ -64,13 +65,41 @@ const List = ({items}:{items:string[]})=> (
 );
 
 export default function Page(){
-  const active = useActiveSection([
-  "services",
-  "offers",
-  "pricing",
-  "faq",
-  "contact",
-]);
+  // Robust auto-scroll after redirects like /services -> /?section=services
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    // Prefer reading from the actual URL to avoid timing quirks
+    const section = new URLSearchParams(window.location.search).get('section')
+    if (!section) return
+
+    const cleanUrl = () => {
+      const url = new URL(window.location.href)
+      url.searchParams.delete('section')
+      window.history.replaceState({}, '', url.pathname + url.hash)
+    }
+
+    const tryScroll = () => {
+      const el = document.getElementById(section)
+      if (!el) return false
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      cleanUrl()
+      return true
+    }
+
+    // Try now; if not found yet, retry a few times while the DOM settles
+    if (tryScroll()) return
+    let attempts = 0
+    const id = setInterval(() => {
+      attempts++
+      if (tryScroll() || attempts > 10) clearInterval(id)
+    }, 60)
+
+    return () => clearInterval(id)
+  }, [searchParams])
+
+  // keep hook call if you rely on it elsewhere (safe even if unused)
+  useActiveSection(["services","offers","pricing","faq","contact"])
 
   return (
     <div className="min-h-screen text-stone-900 bg-[radial-gradient(1200px_600px_at_10%_0%,#fff,rgba(245,245,244,1))]">
@@ -136,77 +165,75 @@ export default function Page(){
         </div>
       </Section>
 
-      {/* PROOF BAR */}
-      {/* PROOF BAR (Improved) */}
-
-
-{/* PROOF BAR — Stats style */}
-<Section className="py-12 bg-stone-950 text-stone-100">
-  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
-    {[
-      { n: "24+", l: "Projects shipped" },
-      { n: "₹10L+", l: "Ad spend managed" },
-      { n: "7 days", l: "Fastest launch" },
-      { n: "98%", l: "Client satisfaction" },
-    ].map((s, i) => (
-      <motion.div
-      
-        key={i}
-    initial={{ opacity: 0, y: 12 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, amount: 0.3 }}
-    transition={{ duration: 0.6, delay: i * 0.08 }}  // <- slow & staggered
-    className="relative text-center rounded-2xl py-6 bg-stone-900/60
-               ring-1 ring-stone-800/80 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]"
-  >
-    <span className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-stone-700/40 to-transparent" />
-    <div className="text-3xl md:text-4xl font-semibold text-amber-300">{s.n}</div>
-    <div className="mt-1 text-sm md:text-base text-stone-300">{s.l}</div>
-      </motion.div>
-    ))}
-  </div>
-</Section>
-
+      {/* PROOF BAR — Stats style */}
+      <Section className="py-12 bg-stone-950 text-stone-100">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+          {[
+            { n: "24+", l: "Projects shipped" },
+            { n: "₹10L+", l: "Ad spend managed" },
+            { n: "7 days", l: "Fastest launch" },
+            { n: "98%", l: "Client satisfaction" },
+          ].map((s, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: i * 0.08 }}
+              className="relative text-center rounded-2xl py-6 bg-stone-900/60
+                         ring-1 ring-stone-800/80 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]"
+            >
+              <span className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-stone-700/40 to-transparent" />
+              <div className="text-3xl md:text-4xl font-semibold text-amber-300">{s.n}</div>
+              <div className="mt-1 text-sm md:text-base text-stone-300">{s.l}</div>
+            </motion.div>
+          ))}
+        </div>
+      </Section>
 
       {/* SERVICES */}
-      <Section id="services" className="bg-gradient-to-b from-stone-50 to-white">
-        <div className="flex items-center gap-3 mb-6">
-          <Badge>What I do</Badge>
-          <h2 className="text-3xl md:text-4xl font-semibold text-stone-900">Core services</h2>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((f,idx)=>(
-            <Card key={idx} className="rounded-2xl shadow-sm bg-white border border-stone-200 hover:shadow-md hover:border-emerald-300 transition">
-              <CardHeader className="space-y-2">
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-stone-900 text-amber-300">{f.icon}</div>
-                <CardTitle>{f.title}</CardTitle>
-                <CardDescription>Done-for-you, shipped fast.</CardDescription>
-              </CardHeader>
-              <CardContent><List items={f.points}/></CardContent>
-            </Card>
-          ))}
-        </div>
-      </Section>
+      <section id="services" className="scroll-mt-20">
+        <Section className="bg-gradient-to-b from-stone-50 to-white">
+          <div className="flex items-center gap-3 mb-6">
+            <Badge>What I do</Badge>
+            <h2 className="text-3xl md:text-4xl font-semibold text-stone-900">Core services</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((f,idx)=>(
+              <Card key={idx} className="rounded-2xl shadow-sm bg-white border border-stone-200 hover:shadow-md hover:border-emerald-300 transition">
+                <CardHeader className="space-y-2">
+                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-stone-900 text-amber-300">{f.icon}</div>
+                  <CardTitle>{f.title}</CardTitle>
+                  <CardDescription>Done-for-you, shipped fast.</CardDescription>
+                </CardHeader>
+                <CardContent><List items={f.points}/></CardContent>
+              </Card>
+            ))}
+          </div>
+        </Section>
+      </section>
 
       {/* OFFERS */}
-      <Section id="offers" className="bg-gradient-to-r from-emerald-50 via-stone-50 to-amber-50">
-        <div className="flex items-center gap-3 mb-6">
-          <Badge>Starting points</Badge>
-          <h2 className="text-2xl md:text-3xl font-semibold">Battle-tested offers</h2>
-        </div>
-        <div className="grid md:grid-cols-3 gap-6">
-          {offers.map((o,idx)=>(
-            <Card key={idx} className="rounded-2xl shadow-sm bg-white border border-stone-200 hover:border-emerald-300">
-              <CardHeader className="space-y-2">
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white">{o.icon}</div>
-                <CardTitle>{o.title}</CardTitle>
-                <CardDescription>{o.desc}</CardDescription>
-              </CardHeader>
-              <CardContent><List items={o.bullets}/></CardContent>
-            </Card>
-          ))}
-        </div>
-      </Section>
+      <section id="offers" className="scroll-mt-20">
+        <Section className="bg-gradient-to-r from-emerald-50 via-stone-50 to-amber-50">
+          <div className="flex items-center gap-3 mb-6">
+            <Badge>Starting points</Badge>
+            <h2 className="text-2xl md:text-3xl font-semibold">Battle-tested offers</h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {offers.map((o,idx)=>(
+              <Card key={idx} className="rounded-2xl shadow-sm bg-white border border-stone-200 hover:border-emerald-300">
+                <CardHeader className="space-y-2">
+                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white">{o.icon}</div>
+                  <CardTitle>{o.title}</CardTitle>
+                  <CardDescription>{o.desc}</CardDescription>
+                </CardHeader>
+                <CardContent><List items={o.bullets}/></CardContent>
+              </Card>
+            ))}
+          </div>
+        </Section>
+      </section>
 
       {/* PROCESS */}
       <Section className="bg-stone-900 text-stone-100">
@@ -227,147 +254,151 @@ export default function Page(){
       </Section>
 
       {/* PRICING */}
-      <Section id="pricing" className="bg-gradient-to-b from-amber-50 to-stone-50">
-        <div className="flex items-center gap-3 mb-6">
-          <Badge>Transparent</Badge>
-          <h2 className="text-2xl md:text-3xl font-semibold">Pricing (from)</h2>
+      <section id="pricing" className="scroll-mt-20">
+        <Section className="bg-gradient-to-b from-amber-50 to-stone-50">
+          <div className="flex items-center gap-3 mb-6">
+            <Badge>Transparent</Badge>
+            <h2 className="text-2xl md:text-3xl font-semibold">Pricing (from)</h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[{
+              name:"Starter",
+              price:"₹14,999",
+              items:["1-page website","Pixel/CAPI basic","1 form + WhatsApp handoff","1 round of revisions"],
+            },{
+              name:"Growth",
+              price:"₹29,999",
+              items:["Shopify/Wix site or revamp","Meta ads setup + 3 creatives","WhatsApp funnel","Weekly optimization"],
+            },{
+              name:"Pro",
+              price:"₹59,999",
+              items:["Full funnel build","Advanced tracking","Monthly content plan","Reports + strategy call"],
+            }].map((p,i)=>(
+              <Card key={i} className="rounded-2xl shadow-sm bg-white border border-stone-200 hover:shadow-md">
+                <CardHeader>
+                  <CardTitle>{p.name}</CardTitle>
+                  <CardDescription>Everything you need to move.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-semibold text-stone-900">{p.price}<span className="text-base text-stone-500"> / mo</span></div>
+                  <List items={p.items}/>
+                  <div className="mt-6">
+                    <Button asChild className="w-full rounded-xl bg-stone-900 hover:bg-stone-800"><a href="#contact">Pick {p.name}</a></Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <p className="mt-6 text-sm text-stone-600">Custom scopes welcome. Media budgets billed separately.</p>
+        </Section>
+      </section>
+
+      <Section className="py-10 md:py-12 bg-emerald-800 text-emerald-50">
+        <div className="text-center mb-4 md:mb-6">
+          <span className="text-xs md:text-sm uppercase tracking-widest text-emerald-100/90">
+            Built with
+          </span>
         </div>
-        <div className="grid md:grid-cols-3 gap-6">
-          {[{
-            name:"Starter",
-            price:"₹14,999",
-            items:["1-page website","Pixel/CAPI basic","1 form + WhatsApp handoff","1 round of revisions"],
-          },{
-            name:"Growth",
-            price:"₹29,999",
-            items:["Shopify/Wix site or revamp","Meta ads setup + 3 creatives","WhatsApp funnel","Weekly optimization"],
-          },{
-            name:"Pro",
-            price:"₹59,999",
-            items:["Full funnel build","Advanced tracking","Monthly content plan","Reports + strategy call"],
-          }].map((p,i)=>(
-            <Card key={i} className="rounded-2xl shadow-sm bg-white border border-stone-200 hover:shadow-md">
-              <CardHeader>
-                <CardTitle>{p.name}</CardTitle>
-                <CardDescription>Everything you need to move.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-semibold text-stone-900">{p.price}<span className="text-base text-stone-500"> / mo</span></div>
-                <List items={p.items}/>
-                <div className="mt-6">
-                  <Button asChild className="w-full rounded-xl bg-stone-900 hover:bg-stone-800"><a href="#contact">Pick {p.name}</a></Button>
-                </div>
-              </CardContent>
-            </Card>
+
+        <div className="flex flex-wrap items-center justify-center gap-2.5 md:gap-3">
+          {[
+            "Pixel / CAPI",
+            "Razorpay",
+            "WhatsApp API",
+            "Meta Ads",
+            "Shopify",
+            "Crisp reporting",
+            "Weekly optimization",
+            "Founder-friendly",
+          ].map((label, i) => (
+            <span
+              key={i}
+              className="inline-flex items-center gap-2 rounded-full bg-emerald-700/60 ring-1 ring-emerald-400/20 px-3.5 py-2
+                         text-sm md:text-base backdrop-blur-md"
+            >
+              <Check className="w-4 h-4 text-amber-300" />
+              <span className="font-medium">{label}</span>
+            </span>
           ))}
         </div>
-        <p className="mt-6 text-sm text-stone-600">Custom scopes welcome. Media budgets billed separately.</p>
       </Section>
-
-<Section className="py-10 md:py-12 bg-emerald-800 text-emerald-50">
-  <div className="text-center mb-4 md:mb-6">
-    <span className="text-xs md:text-sm uppercase tracking-widest text-emerald-100/90">
-      Built with
-    </span>
-  </div>
-
-  <div className="flex flex-wrap items-center justify-center gap-2.5 md:gap-3">
-    {[
-      "Pixel / CAPI",
-      "Razorpay",
-      "WhatsApp API",
-      "Meta Ads",
-      "Shopify",
-      "Crisp reporting",
-      "Weekly optimization",
-      "Founder-friendly",
-    ].map((label, i) => (
-      <span
-        key={i}
-        className="inline-flex items-center gap-2 rounded-full bg-emerald-700/60 ring-1 ring-emerald-400/20 px-3.5 py-2
-                   text-sm md:text-base backdrop-blur-md"
-      >
-        <Check className="w-4 h-4 text-amber-300" />
-        <span className="font-medium">{label}</span>
-      </span>
-    ))}
-  </div>
-</Section>
 
       {/* FAQ */}
-      <Section id="faq" className="bg-white">
-        <div className="flex items-center gap-3 mb-6">
-          <Badge>Answers</Badge>
-          <h2 className="text-2xl md:text-3xl font-semibold">FAQ</h2>
-        </div>
-        <div className="grid md:grid-cols-2 gap-6">
-          {faqs.map((f,i)=>(
-            <Card
-  key={i}
-  className="rounded-2xl shadow-sm bg-stone-50 border border-stone-200
-             transition hover:shadow-md hover:border-emerald-300 hover:bg-white"
->
-
-              <CardHeader>
-                <CardTitle className="text-xl md:text-2xl">{f.q}</CardTitle>
-                <CardDescription className="text-stone-700">{f.a}</CardDescription>
-              </CardHeader>
-            </Card>
-          ))}
-        </div>
-      </Section>
+      <section id="faq" className="scroll-mt-20">
+        <Section className="bg-white">
+          <div className="flex items-center gap-3 mb-6">
+            <Badge>Answers</Badge>
+            <h2 className="text-2xl md:text-3xl font-semibold">FAQ</h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            {faqs.map((f,i)=>(
+              <Card
+                key={i}
+                className="rounded-2xl shadow-sm bg-stone-50 border border-stone-200
+                           transition hover:shadow-md hover:border-emerald-300 hover:bg-white"
+              >
+                <CardHeader>
+                  <CardTitle className="text-xl md:text-2xl">{f.q}</CardTitle>
+                  <CardDescription className="text-stone-700">{f.a}</CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+        </Section>
+      </section>
 
       {/* CONTACT */}
-      <Section id="contact" className="bg-gradient-to-b from-stone-50 to-white">
-        <div className="grid md:grid-cols-2 gap-10 items-start">
-          <div>
-            <div className="flex items-center gap-3 mb-6">
-              <Badge>Let’s talk</Badge>
-              <h2 className="text-2xl md:text-3xl font-semibold">Book a discovery call</h2>
+      <section id="contact" className="scroll-mt-20">
+        <Section className="bg-gradient-to-b from-stone-50 to-white">
+          <div className="grid md:grid-cols-2 gap-10 items-start">
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <Badge>Let’s talk</Badge>
+                <h2 className="text-2xl md:text-3xl font-semibold">Book a discovery call</h2>
+              </div>
+              <p className="text-stone-700 max-w-prose">Tell me about your business and the outcome you want next month. I’ll reply with a crisp plan and timeline.</p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Button asChild className="rounded-xl bg-emerald-700 hover:bg-emerald-800"><a href="https://cal.com/kanav-guglani/30min" target="_blank" rel="noreferrer">Schedule on Cal</a></Button>
+                <Button variant="outline" asChild className="rounded-xl border-stone-900 text-stone-900 hover:bg-stone-100"><a href="mailto:kanavguglaniofficial@gmail.com">Email me</a></Button>
+                <Button variant="outline" asChild className="rounded-xl border-emerald-700 text-emerald-700 hover:bg-emerald-50"><a href="https://wa.me/917087796662" target="_blank" rel="noreferrer">WhatsApp</a></Button>
+              </div>
             </div>
-            <p className="text-stone-700 max-w-prose">Tell me about your business and the outcome you want next month. I’ll reply with a crisp plan and timeline.</p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button asChild className="rounded-xl bg-emerald-700 hover:bg-emerald-800"><a href="https://cal.com/kanav-guglani/30min" target="_blank" rel="noreferrer">Schedule on Cal</a></Button>
-              <Button variant="outline" asChild className="rounded-xl border-stone-900 text-stone-900 hover:bg-stone-100"><a href="mailto:kanavguglaniofficial@gmail.com">Email me</a></Button>
-              <Button variant="outline" asChild className="rounded-xl border-emerald-700 text-emerald-700 hover:bg-emerald-50"><a href="https://wa.me/917087796662" target="_blank" rel="noreferrer">WhatsApp</a></Button>
-            </div>
+            <Card className="rounded-2xl shadow-sm bg-white border border-stone-200">
+              <CardHeader>
+                <CardTitle>Quick form</CardTitle>
+                <CardDescription>Get a same-day response.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form
+                  className="space-y-4"
+                  action="https://formspree.io/f/mkgvopln"
+                  method="POST"
+                >
+                  {/* Honeypot to reduce spam */}
+                  <input type="text" name="_gotcha" className="hidden" tabIndex={-1} autoComplete="off" />
+
+                  {/* Optional: subject line in your Formspree dashboard */}
+                  <input type="hidden" name="_subject" value="New project enquiry from website" />
+
+                  {/* IMPORTANT: keep `name="email"` so Formspree sets reply-to */}
+                  <Input name="name" placeholder="Your name" required />
+                  <Input type="email" name="email" placeholder="Email" required />
+                  <Input name="phone" placeholder="WhatsApp / Phone (optional)" />
+                  <Textarea name="message" placeholder="What do you need help with?" rows={5} required />
+
+                  <Button type="submit" className="w-full rounded-xl bg-stone-900 hover:bg-stone-800">
+                    Send
+                  </Button>
+
+                  <p className="text-xs text-stone-500">
+                    By submitting, you agree to be contacted about your project. No spam—ever.
+                  </p>
+                </form>
+              </CardContent>
+            </Card>
           </div>
-          <Card className="rounded-2xl shadow-sm bg-white border border-stone-200">
-            <CardHeader>
-              <CardTitle>Quick form</CardTitle>
-              <CardDescription>Get a same-day response.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form
-  className="space-y-4"
-  action="https://formspree.io/f/mkgvopln"
-  method="POST"
->
-  {/* Honeypot to reduce spam */}
-  <input type="text" name="_gotcha" className="hidden" tabIndex={-1} autoComplete="off" />
-
-  {/* Optional: subject line in your Formspree dashboard */}
-  <input type="hidden" name="_subject" value="New project enquiry from website" />
-
-  {/* IMPORTANT: keep `name="email"` so Formspree sets reply-to */}
-  <Input name="name" placeholder="Your name" required />
-  <Input type="email" name="email" placeholder="Email" required />
-  <Input name="phone" placeholder="WhatsApp / Phone (optional)" />
-  <Textarea name="message" placeholder="What do you need help with?" rows={5} required />
-
-  <Button type="submit" className="w-full rounded-xl bg-stone-900 hover:bg-stone-800">
-    Send
-  </Button>
-
-  <p className="text-xs text-stone-500">
-    By submitting, you agree to be contacted about your project. No spam—ever.
-  </p>
-</form>
-
-            </CardContent>
-          </Card>
-        </div>
-      </Section>
+        </Section>
+      </section>
 
       {/* FOOTER */}
       <footer className="border-t border-stone-800 py-10 bg-stone-900 text-stone-100">
@@ -386,5 +417,5 @@ export default function Page(){
         </div>
       </footer>
     </div>
-  );
+  )
 }
