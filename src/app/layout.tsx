@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Poppins } from "next/font/google";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Suspense } from 'react'
+
 
 // ---- Site constants from env (edit .env.local) ----
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
@@ -66,8 +68,9 @@ export default function RootLayout({
       <body
         className={`${poppins.className} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Suspense fallback={null}>
         {children}
-
+        </Suspense>
         {/* JSON-LD: Organization */}
         <Script
           id="ld-org"
