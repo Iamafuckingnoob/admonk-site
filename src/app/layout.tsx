@@ -5,7 +5,7 @@ import { Poppins } from "next/font/google";
 import { Geist, Geist_Mono } from "next/font/google";
 
 // ---- Site constants from env (edit .env.local) ----
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Flow & Funnel";
 const siteUrl =
@@ -99,65 +99,38 @@ export default function RootLayout({
             }),
           }}
         />
-        {GA_ID && (
-  <>
-    <Script
-      src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-      strategy="afterInteractive"
-    />
-    <Script id="ga-init" strategy="afterInteractive">
-      {`
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', '${GA_ID}', {
-          anonymize_ip: true,
-          send_page_view: true
-        });
-      `}
-    </Script>
-  </>
-)}
-<Script id="ga-debug" strategy="afterInteractive">
-  {`console.log('[GA_ID]', '${GA_ID ?? 'MISSING'}')`}
-</Script>
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID
+        {/* GA4 — single, correct block */}
+        {GA_ID ? (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+              onLoad={() => console.log("[GA] gtag.js loaded")}
+              onError={(e) => console.log("[GA] gtag.js FAILED", e)}
+            />
+            <Script id="ga-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}', { anonymize_ip: true, send_page_view: true });
 
-{GA_ID && (
-  <>
-    {/* 1) Load GA script with explicit onLoad/onError logs */}
-    <Script
-      src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-      strategy="afterInteractive"
-      onLoad={() => console.log('[GA] gtag.js loaded')}
-      onError={(e) => console.log('[GA] gtag.js FAILED', e)}
-    />
-
-    {/* 2) Init + send a visible test event */}
-    <Script id="ga-init" strategy="afterInteractive">
-      {`
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-
-        gtag('js', new Date());
-        gtag('config', '${GA_ID}', { anonymize_ip: true, send_page_view: true });
-
-        // Send a test event after 1.5s so you can see it in Network as "collect"
-        setTimeout(() => {
-          if (typeof gtag === 'function') {
-            gtag('event', 'test_ping', { debug_mode: true });
-            console.log('[GA] test_ping sent');
-          } else {
-            console.log('[GA] gtag missing after init');
-          }
-        }, 1500);
-      `}
-    </Script>
-  </>
-)}
-
- 
+                // send a quick test event so you can see a 'collect' request
+                setTimeout(() => {
+                  if (typeof gtag === 'function') {
+                    gtag('event', 'debug_test_ping', { debug_mode: true });
+                    console.log('[GA] debug_test_ping sent');
+                  }
+                }, 800);
+              `}
+            </Script>
+          </>
+        ) : (
+          <Script id="ga-missing" strategy="afterInteractive">
+            {`console.warn('[GA] NEXT_PUBLIC_GA_ID is missing')`}
+          </Script>
+        )}
       </body>
     </html>
   );
