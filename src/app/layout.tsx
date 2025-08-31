@@ -128,9 +128,7 @@ export default function RootLayout({
           </>
         )}
         {/* DEBUG: print GA ID at runtime (so you can see it on Vercel) */}
-<Script id="ga-debug" strategy="afterInteractive">
-  {`console.log('[GA_ID]', '${process.env.NEXT_PUBLIC_GA_ID ?? 'MISSING'}')`}
-</Script>
+
 
 {/* GA4 (loader in <head>, init after hydration) */}
 {process.env.NEXT_PUBLIC_GA_ID && (
