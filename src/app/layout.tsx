@@ -1,33 +1,61 @@
 import "./globals.css";
 import type { Metadata } from "next";
-
-// 1) Fonts
+import Script from "next/script";
 import { Poppins } from "next/font/google";
 import { Geist, Geist_Mono } from "next/font/google";
 
-// 2) Configure fonts
+// ---- Site constants from env (edit .env.local) ----
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID
+
+const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Flow & Funnel";
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  "https://admonk-digital-2025.vercel.app";
+
+const titleDefault = `${siteName} — Lean marketing. Real outcomes.`;
+const description =
+  "We build fast websites, Shopify/Wix stores, Meta ads, and WhatsApp funnels with clean tracking and clear weekly updates.";
+
+// ---- Fonts ----
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
-
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
-// 3) SEO / metadata (optional: update to your site info)
+// ---- SEO (Next.js Metadata API) ----
 export const metadata: Metadata = {
-  title: "Admonk Digital — Lean marketing. Real outcomes.",
-  description: "Websites, ads, and WhatsApp funnels built fast with an earthy, high-contrast palette.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: titleDefault,
+    template: `%s — ${siteName}`,
+  },
+  description,
+  openGraph: {
+    type: "website",
+    url: siteUrl,
+    title: titleDefault,
+    siteName,
+    description,
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: siteName }],
+    locale: "en_IN",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: titleDefault,
+    description,
+    images: ["/og.png"],
+  },
+  robots: { index: true, follow: true },
 };
 
-// 4) Apply Poppins to <body>, keep Geist variables available
 export default function RootLayout({
   children,
 }: {
@@ -39,6 +67,58 @@ export default function RootLayout({
         className={`${poppins.className} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+
+        {/* JSON-LD: Organization */}
+        <Script
+          id="ld-org"
+          type="application/ld+json"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: siteName,
+              url: siteUrl,
+              logo: `${siteUrl}/favicon.ico`,
+              sameAs: [],
+            }),
+          }}
+        />
+
+        {/* JSON-LD: WebSite */}
+        <Script
+          id="ld-website"
+          type="application/ld+json"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: siteName,
+              url: siteUrl,
+            }),
+          }}
+        />
+        {GA_ID && (
+  <>
+    <Script
+      src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+      strategy="afterInteractive"
+    />
+    <Script id="ga-init" strategy="afterInteractive">
+      {`
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '${GA_ID}', {
+          anonymize_ip: true,
+          send_page_view: true
+        });
+      `}
+    </Script>
+  </>
+)}
+
       </body>
     </html>
   );
