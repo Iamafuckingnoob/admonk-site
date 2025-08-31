@@ -122,6 +122,40 @@ export default function RootLayout({
   {`console.log('[GA_ID]', '${GA_ID ?? 'MISSING'}')`}
 </Script>
 
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID
+
+{GA_ID && (
+  <>
+    {/* 1) Load GA script with explicit onLoad/onError logs */}
+    <Script
+      src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+      strategy="afterInteractive"
+      onLoad={() => console.log('[GA] gtag.js loaded')}
+      onError={(e) => console.log('[GA] gtag.js FAILED', e)}
+    />
+
+    {/* 2) Init + send a visible test event */}
+    <Script id="ga-init" strategy="afterInteractive">
+      {`
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+
+        gtag('js', new Date());
+        gtag('config', '${GA_ID}', { anonymize_ip: true, send_page_view: true });
+
+        // Send a test event after 1.5s so you can see it in Network as "collect"
+        setTimeout(() => {
+          if (typeof gtag === 'function') {
+            gtag('event', 'test_ping', { debug_mode: true });
+            console.log('[GA] test_ping sent');
+          } else {
+            console.log('[GA] gtag missing after init');
+          }
+        }, 1500);
+      `}
+    </Script>
+  </>
+)}
 
  
       </body>
