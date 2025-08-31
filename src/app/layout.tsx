@@ -100,14 +100,12 @@ export default function RootLayout({
           }}
         />
 
-        {/* GA4 — single, correct block */}
-        {GA_ID ? (
+        {/* GA4 — single block, NO event handlers */}
+        {GA_ID && (
           <>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
               strategy="afterInteractive"
-              onLoad={() => console.log("[GA] gtag.js loaded")}
-              onError={(e) => console.log("[GA] gtag.js FAILED", e)}
             />
             <Script id="ga-init" strategy="afterInteractive">
               {`
@@ -116,20 +114,15 @@ export default function RootLayout({
                 gtag('js', new Date());
                 gtag('config', '${GA_ID}', { anonymize_ip: true, send_page_view: true });
 
-                // send a quick test event so you can see a 'collect' request
+                // test event so you can see 'collect' in Network
                 setTimeout(() => {
                   if (typeof gtag === 'function') {
                     gtag('event', 'debug_test_ping', { debug_mode: true });
-                    console.log('[GA] debug_test_ping sent');
                   }
                 }, 800);
               `}
             </Script>
           </>
-        ) : (
-          <Script id="ga-missing" strategy="afterInteractive">
-            {`console.warn('[GA] NEXT_PUBLIC_GA_ID is missing')`}
-          </Script>
         )}
       </body>
     </html>
