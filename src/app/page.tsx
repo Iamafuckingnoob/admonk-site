@@ -108,7 +108,7 @@ export default function Page(){
         <div className="container mx-auto max-w-7xl px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-amber-400 text-stone-900 font-bold">A</span>
-            <span className="font-semibold">Admonk Digital</span>
+            <span className="font-semibold">Flow & Funnel</span>
             <Badge>Solo-first growth studio- live</Badge>
           </div>
           <div className="hidden md:flex items-center gap-6 text-sm">
@@ -405,7 +405,7 @@ export default function Page(){
         <div className="container mx-auto max-w-7xl px-4 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-amber-400 text-stone-900 font-bold">A</span>
-            <span className="font-semibold">Admonk Digital</span>
+            <span className="font-semibold">Flow & Funnel</span>
             <span className="text-stone-400">© {new Date().getFullYear()}</span>
           </div>
           <div className="flex items-center gap-4 text-sm text-stone-300">
