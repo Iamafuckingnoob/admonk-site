@@ -1,13 +1,25 @@
 import "./globals.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Poppins } from "next/font/google";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Suspense } from 'react'
-
+// FIX: Geist fonts come from the geist/font package, not next/font/google
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
+import { Suspense } from "react";
 
 // ---- Site constants from env (edit .env.local) ----
+
+
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.NODE_ENV === "production"
+    ? "https://flowandfunnel.com"
+    : "http://localhost:3000");
+
+const SITE_NAME = "Flow & Funnel";
+const SITE_DESC =
+  "Performance marketing, funnels, and conversion-led growth. We design flows that convert and funnels that scale.";
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Flow & Funnel";
 const siteUrl =
@@ -23,39 +35,53 @@ const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// Keep your existing variable names so className below stays the same
+const geistSans = GeistSans;
+const geistMono = GeistMono;
 
 // ---- SEO (Next.js Metadata API) ----
+// MERGE: You had two `export const metadata`. This is the single, merged one.
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  // Use env-aware absolute base (must include scheme)
+  metadataBase: new URL(SITE_URL),
+
+  // Keep your preferred title template & copy
   title: {
     default: titleDefault,
     template: `%s — ${siteName}`,
   },
   description,
+
+  // Canonical (resolved against metadataBase)
+  alternates: { canonical: "/" },
+
+  // Open Graph
   openGraph: {
     type: "website",
-    url: siteUrl,
+    url: "/", // resolved against metadataBase
     title: titleDefault,
     siteName,
     description,
     images: [{ url: "/og.png", width: 1200, height: 630, alt: siteName }],
     locale: "en_IN",
   },
+
+  // Twitter
   twitter: {
     card: "summary_large_image",
     title: titleDefault,
     description,
     images: ["/og.png"],
   },
+
+  // Indexing
   robots: { index: true, follow: true },
+};
+
+// Viewport (you already referenced this type)
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  colorScheme: "light dark",
 };
 
 export default function RootLayout({
@@ -69,8 +95,9 @@ export default function RootLayout({
         className={`${poppins.className} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Suspense fallback={null}>
-        {children}
+          {children}
         </Suspense>
+
         {/* JSON-LD: Organization */}
         <Script
           id="ld-org"
@@ -127,32 +154,29 @@ export default function RootLayout({
             </Script>
           </>
         )}
-        {/* DEBUG: print GA ID at runtime (so you can see it on Vercel) */}
 
-
-{/* GA4 (loader in <head>, init after hydration) */}
-{process.env.NEXT_PUBLIC_GA_ID && (
-  <>
-    {/* goes to <head> */}
-    <Script
-      src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-      strategy="beforeInteractive"
-    />
-    {/* runs after the app is interactive */}
-    <Script id="ga-init" strategy="afterInteractive">
-      {`
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
-          anonymize_ip: true,
-          send_page_view: true
-        });
-      `}
-    </Script>
-  </>
-)}
-
+        {/* GA4 (loader in <head>, init after hydration) */}
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <>
+            {/* goes to <head> */}
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+              strategy="beforeInteractive"
+            />
+            {/* runs after the app is interactive */}
+            <Script id="ga-init-2" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
+                  anonymize_ip: true,
+                  send_page_view: true
+                });
+              `}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );
