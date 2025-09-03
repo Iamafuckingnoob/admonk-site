@@ -1,5 +1,6 @@
 'use client'
 
+
 import React, { useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
@@ -12,6 +13,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useActiveSection } from './hooks/useActiveSection'
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Home",
+  description:
+    "Performance marketing, funnels, and conversion-led growth. We design flows that convert and funnels that scale.",
+  alternates: { canonical: "/" },
+};
+
 
 /** EARTHY PALETTE (consistent): dark stone + emerald + amber + sand */
 

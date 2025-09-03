@@ -6,6 +6,8 @@ import { Poppins } from "next/font/google";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Suspense } from "react";
+import { Analytics } from "../components/ui/analytics";
+
 
 // ---- Site constants from env (edit .env.local) ----
 
@@ -129,55 +131,31 @@ export default function RootLayout({
             }),
           }}
         />
+{GA_ID && (
+  <>
+    <Script
+      src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+      strategy="afterInteractive"
+    />
+    <Script id="ga-init" strategy="afterInteractive">
+      {`
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag;
+        gtag('js', new Date());
+        // TEMP: auto-send first page_view so we can verify in Network
+        gtag('config', '${GA_ID}', { anonymize_ip: true, send_page_view: false });
 
-        {/* GA4 — single block, NO event handlers */}
-        {GA_ID && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="ga-init" strategy="afterInteractive">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${GA_ID}', { anonymize_ip: true, send_page_view: true });
+      `}
+    </Script>
 
-                // test event so you can see 'collect' in Network
-                setTimeout(() => {
-                  if (typeof gtag === 'function') {
-                    gtag('event', 'debug_test_ping', { debug_mode: true });
-                  }
-                }, 800);
-              `}
-            </Script>
-          </>
-        )}
+    {/* keeps route-change tracking ready for later */}
+    {GA_ID && <Analytics gaId={GA_ID} />}
+  </>
+)}
 
-        {/* GA4 (loader in <head>, init after hydration) */}
-        {process.env.NEXT_PUBLIC_GA_ID && (
-          <>
-            {/* goes to <head> */}
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-              strategy="beforeInteractive"
-            />
-            {/* runs after the app is interactive */}
-            <Script id="ga-init-2" strategy="afterInteractive">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
-                  anonymize_ip: true,
-                  send_page_view: true
-                });
-              `}
-            </Script>
-          </>
-        )}
-      </body>
+        
+              </body>
     </html>
   );
 }
