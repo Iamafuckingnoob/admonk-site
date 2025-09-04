@@ -43,9 +43,11 @@ const geistMono = GeistMono;
 
 // ---- SEO (Next.js Metadata API) ----
 // MERGE: You had two `export const metadata`. This is the single, merged one.
+
 export const metadata: Metadata = {
   // Use env-aware absolute base (must include scheme)
   metadataBase: new URL(SITE_URL),
+
 
   // Keep your preferred title template & copy
   title: {
@@ -54,6 +56,9 @@ export const metadata: Metadata = {
   },
   description,
 
+   manifest: "/site.webmanifest",
+  icons: { icon: "/favicon.ico", shortcut: "/favicon.ico", apple: "/favicon.ico" },
+  
   // Canonical (resolved against metadataBase)
   alternates: { canonical: "/" },
 
