@@ -108,11 +108,19 @@ export default function HomeClient() {
           </div>
           <div className="hidden md:flex items-center gap-6 text-sm">
             <HashLink href="#services">Services</HashLink>
-            <a href="#offers" className="hover:text-amber-300">Offers</a>
-            <a href="#pricing" className="hover:text-amber-300">Pricing</a>
-            <a href="#faq" className="hover:text-amber-300">FAQ</a>
-            <a href="#contact" className="hover:text-amber-300">Contact</a>
-            <a className="inline-flex items-center gap-2 rounded-xl border border-emerald-400 bg-emerald-500/90 text-stone-900 px-4 py-2 text-sm" href="https://wa.me/917087796662" target="_blank" rel="noreferrer"><PhoneCall className="w-4 h-4"/> WhatsApp</a>
+            <HashLink href="#offers">Offers</HashLink>
+            <HashLink href="#pricing">Pricing</HashLink>
+            <HashLink href="#faq">FAQ</HashLink>
+            <HashLink href="#contact">Contact</HashLink>
+            <a
+  className="inline-flex items-center gap-2 rounded-xl border border-emerald-400 bg-emerald-500/90 text-stone-900 px-4 py-2 text-sm"
+  href="https://wa.me/917087796662"
+  target="_blank"
+  rel="noreferrer"
+>
+  <PhoneCall className="w-4 h-4" /> WhatsApp
+</a>
+
           </div>
         </div>
       </nav>
@@ -382,8 +390,9 @@ export default function HomeClient() {
           </div>
           <div className="flex items-center gap-4 text-sm text-stone-300">
             <a href="#services" className="hover:text-amber-300">Services</a>
-            <a href="#offers" className="hover:text-amber-300">Offers</a>
-            <a href="#pricing" className="hover:text-amber-300">Pricing</a>
+<a href="#offers" className="hover:text-amber-300">Offers</a>
+
+                        <a href="#pricing" className="hover:text-amber-300">Pricing</a>
             <a href="#contact" className="hover:text-amber-300">Contact</a>
           </div>
         </div>
