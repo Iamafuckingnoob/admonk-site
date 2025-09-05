@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -63,6 +63,18 @@ const List = ({items}:{items:string[]})=> (
 );
 
 export default function HomeClient() {
+  const [menuOpen, setMenuOpen] = useState(false);
+    const track = (label: string) => {
+  if (typeof window === "undefined") return;
+  const g = (window as any).gtag;
+  if (typeof g === "function") {
+    g("event", "select_content", {
+      content_type: "cta",
+      item_id: label,
+    });
+  }
+};
+
   // robust auto-scroll after redirects like /services -> /?section=services
   const searchParams = useSearchParams();
 
@@ -117,13 +129,45 @@ export default function HomeClient() {
   href="https://wa.me/917087796662"
   target="_blank"
   rel="noreferrer"
+  onClick={() => track("whatsapp_nav")}
 >
   <PhoneCall className="w-4 h-4" /> WhatsApp
 </a>
 
           </div>
+          {/* Mobile hamburger */}
+<button
+  className="md:hidden inline-flex items-center gap-2 rounded-xl border border-stone-700 px-3 py-2"
+  aria-label="Toggle menu"
+  aria-expanded={menuOpen}
+  onClick={() => setMenuOpen(v => !v)}
+>
+  Menu
+</button>
+
         </div>
       </nav>
+      {menuOpen && (
+  <div className="md:hidden border-b border-stone-800 bg-stone-900/95 text-stone-100">
+    <div className="container mx-auto max-w-7xl px-4 py-3 flex flex-col gap-3 text-sm">
+      <HashLink href="#services" className="block" onClick={() => setMenuOpen(false)}>Services</HashLink>
+      <HashLink href="#offers" className="block" onClick={() => setMenuOpen(false)}>Offers</HashLink>
+      <HashLink href="#pricing" className="block" onClick={() => setMenuOpen(false)}>Pricing</HashLink>
+      <HashLink href="#faq" className="block" onClick={() => setMenuOpen(false)}>FAQ</HashLink>
+      <HashLink href="#contact" className="block" onClick={() => setMenuOpen(false)}>Contact</HashLink>
+      <a
+        className="mt-2 inline-flex items-center gap-2 rounded-xl border border-emerald-400 bg-emerald-500/90 text-stone-900 px-4 py-2 text-sm"
+        href="https://wa.me/917087796662"
+        target="_blank"
+        rel="noreferrer"
+        onClick={() => setMenuOpen(false)}
+      >
+        WhatsApp
+      </a>
+    </div>
+  </div>
+)}
+
 
       {/* HERO */}
       <Section className="relative overflow-hidden bg-gradient-to-b from-stone-50 to-stone-100">
@@ -351,7 +395,10 @@ export default function HomeClient() {
               </div>
               <p className="text-stone-700 max-w-prose">Tell me about your business and the outcome you want next month. I’ll reply with a crisp plan and timeline.</p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Button asChild className="rounded-xl bg-emerald-700 hover:bg-emerald-800"><a href="https://cal.com/kanav-guglani/30min" target="_blank" rel="noreferrer">Schedule on Cal</a></Button>
+                <Button asChild className="rounded-xl bg-emerald-700 hover:bg-emerald-800"><a href="https://cal.com/kanav-guglani/30min" target="_blank" rel="noreferrer" onClick={() => track("cal_cta")}>
+  Schedule on Cal
+</a>
+</Button>
                 <Button variant="outline" asChild className="rounded-xl border-stone-900 text-stone-900 hover:bg-stone-100"><a href="mailto:kanavguglaniofficial@gmail.com">Email me</a></Button>
                 <Button variant="outline" asChild className="rounded-xl border-emerald-700 text-emerald-700 hover:bg-emerald-50"><a href="https://wa.me/917087796662" target="_blank" rel="noreferrer">WhatsApp</a></Button>
               </div>
