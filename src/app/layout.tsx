@@ -9,6 +9,8 @@ import { Suspense } from "react";
 import { Analytics } from "../components/ui/analytics";
 
 
+
+
 // ---- Site constants from env (edit .env.local) ----
 
 
@@ -87,6 +89,21 @@ export const viewport: Viewport = {
   themeColor: "#000000",
   colorScheme: "light dark",
 };
+
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Flow & Funnel",
+      "url": "https://admonk-digital-2025.vercel.app",
+      "logo": "https://admonk-digital-2025.vercel.app/og.png",
+      "sameAs": []
+    }),
+  }}
+/>
+
 
 export default function RootLayout({
   children,
