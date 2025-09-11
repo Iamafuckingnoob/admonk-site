@@ -2,37 +2,20 @@
 
 import * as React from "react";
 
-type Props = React.ComponentProps<"a"> & {
-  activeClassName?: string;
-  inactiveClassName?: string;
+type HashLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+  href: `#${string}`;
 };
 
-export function HashLink({
-  href,
-  className,
-  activeClassName = "text-amber-300 font-medium",
-  inactiveClassName = "hover:text-amber-300",
-  ...rest
-}: Props) {
-  const [hash, setHash] = React.useState(
-    typeof window !== "undefined" ? window.location.hash || "#top" : "#top"
-  );
+export function HashLink({ href, onClick, ...rest }: HashLinkProps) {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      const id = href.slice(1);
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    onClick?.(e);
+  };
 
-  React.useEffect(() => {
-    const onHash = () => setHash(window.location.hash || "#top");
-    window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
-  }, []);
-
-  const target = typeof href === "string" ? href : (href as any);
-  const isActive = hash === target;
-
-  const classes = [
-    className,
-    isActive ? activeClassName : inactiveClassName,
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  return <a href={target} className={classes} {...rest} />;
+  return <a href={href} onClick={handleClick} {...rest} />;
 }

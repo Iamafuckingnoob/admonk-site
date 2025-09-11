@@ -14,6 +14,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { HashLink } from "./hash-link";
 import { useActiveSection } from "../../app/hooks/useActiveSection";
 
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
+
 /** EARTHY PALETTE (consistent): dark stone + emerald + amber + sand */
 
 const features = [
@@ -63,17 +70,15 @@ const List = ({items}:{items:string[]})=> (
 );
 
 // -------- Analytics helpers --------
-const track = (action: string, params?: Record<string, any>) => {
-  if (typeof window === "undefined") return;
-  const g = (window as any).gtag;
-  if (typeof g === "function") {
-    g("event", action, {
-      event_category: "engagement",
-      event_label: params?.label || "",
-      ...params,
-    });
-  }
+const track = (action: string, params?: Record<string, unknown>) => {
+  if (typeof window === "undefined" || typeof window.gtag !== "function") return;
+  window.gtag("event", action, {
+    event_category: "engagement",
+    event_label: typeof params?.label === "string" ? params.label : "",
+    ...params,
+  });
 };
+
 
 const trackLink = (name: string, label: string, href?: string, extra?: Record<string, any>) => {
   track(name, { label, href, ...extra });

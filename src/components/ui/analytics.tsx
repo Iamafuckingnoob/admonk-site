@@ -2,6 +2,12 @@
 
 import { useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
 
 export function Analytics({ gaId }: { gaId: string }) {
   const pathname = usePathname();
