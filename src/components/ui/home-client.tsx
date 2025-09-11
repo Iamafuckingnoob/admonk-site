@@ -80,11 +80,14 @@ const track = (action: string, params?: Record<string, unknown>) => {
 };
 
 
-const trackLink = (name: string, label: string, href?: string, extra?: Record<string, any>) => {
+const trackLink = (
+  name: string,
+  label: string,
+  href?: string,
+  extra?: Record<string, unknown>
+) => {
   track(name, { label, href, ...extra });
 };
-
-// -----------------------------------
 
 export default function HomeClient() {
   const [menuOpen, setMenuOpen] = useState(false);

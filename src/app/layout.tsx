@@ -19,9 +19,6 @@ const SITE_URL =
     ? "https://flowandfunnel.com"
     : "http://localhost:3000");
 
-const _SITE_NAME = "Flow & Funnel";
-const _SITE_DESC =
-  "Performance marketing, funnels, and conversion-led growth. We design flows that convert and funnels that scale.";
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Flow & Funnel";
 const siteUrl =
