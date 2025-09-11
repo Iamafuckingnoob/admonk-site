@@ -62,18 +62,27 @@ const List = ({items}:{items:string[]})=> (
   </ul>
 );
 
-export default function HomeClient() {
-  const [menuOpen, setMenuOpen] = useState(false);
-    const track = (label: string) => {
+// -------- Analytics helpers --------
+const track = (action: string, params?: Record<string, any>) => {
   if (typeof window === "undefined") return;
   const g = (window as any).gtag;
   if (typeof g === "function") {
-    g("event", "select_content", {
-      content_type: "cta",
-      item_id: label,
+    g("event", action, {
+      event_category: "engagement",
+      event_label: params?.label || "",
+      ...params,
     });
   }
 };
+
+const trackLink = (name: string, label: string, href?: string, extra?: Record<string, any>) => {
+  track(name, { label, href, ...extra });
+};
+
+// -----------------------------------
+
+export default function HomeClient() {
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // robust auto-scroll after redirects like /services -> /?section=services
   const searchParams = useSearchParams();
@@ -119,55 +128,56 @@ export default function HomeClient() {
             <Badge>Solo-first growth studio- live</Badge>
           </div>
           <div className="hidden md:flex items-center gap-6 text-sm">
-            <HashLink href="#services">Services</HashLink>
-            <HashLink href="#offers">Offers</HashLink>
-            <HashLink href="#pricing">Pricing</HashLink>
-            <HashLink href="#faq">FAQ</HashLink>
-            <HashLink href="#contact">Contact</HashLink>
+            <HashLink href="#services" onClick={() => trackLink("nav_click", "services", "#services")}>Services</HashLink>
+            <HashLink href="#offers" onClick={() => trackLink("nav_click", "offers", "#offers")}>Offers</HashLink>
+            <HashLink href="#pricing" onClick={() => trackLink("nav_click", "pricing", "#pricing")}>Pricing</HashLink>
+            <HashLink href="#faq" onClick={() => trackLink("nav_click", "faq", "#faq")}>FAQ</HashLink>
+            <HashLink href="#contact" onClick={() => trackLink("nav_click", "contact", "#contact")}>Contact</HashLink>
             <a
-  className="inline-flex items-center gap-2 rounded-xl border border-emerald-400 bg-emerald-500/90 text-stone-900 px-4 py-2 text-sm"
-  href="https://wa.me/917087796662"
-  target="_blank"
-  rel="noreferrer"
-  onClick={() => track("whatsapp_nav")}
->
-  <PhoneCall className="w-4 h-4" /> WhatsApp
-</a>
-
+              className="inline-flex items-center gap-2 rounded-xl border border-emerald-400 bg-emerald-500/90 text-stone-900 px-4 py-2 text-sm"
+              href="https://wa.me/917087796662?utm_source=site&utm_medium=cta&utm_campaign=ff_home&utm_content=nav"
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => trackLink("whatsapp_click", "nav", "https://wa.me/917087796662")}
+            >
+              <PhoneCall className="w-4 h-4" /> WhatsApp
+            </a>
           </div>
           {/* Mobile hamburger */}
-<button
-  className="md:hidden inline-flex items-center gap-2 rounded-xl border border-stone-700 px-3 py-2"
-  aria-label="Toggle menu"
-  aria-expanded={menuOpen}
-  onClick={() => setMenuOpen(v => !v)}
->
-  Menu
-</button>
-
+          <button
+            className="md:hidden inline-flex items-center gap-2 rounded-xl border border-stone-700 px-3 py-2"
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+            onClick={() => {
+              setMenuOpen(v => !v);
+              track("menu_toggle", { state: !menuOpen ? "open" : "close" });
+            }}
+          >
+            Menu
+          </button>
         </div>
       </nav>
-      {menuOpen && (
-  <div className="md:hidden border-b border-stone-800 bg-stone-900/95 text-stone-100">
-    <div className="container mx-auto max-w-7xl px-4 py-3 flex flex-col gap-3 text-sm">
-      <HashLink href="#services" className="block" onClick={() => setMenuOpen(false)}>Services</HashLink>
-      <HashLink href="#offers" className="block" onClick={() => setMenuOpen(false)}>Offers</HashLink>
-      <HashLink href="#pricing" className="block" onClick={() => setMenuOpen(false)}>Pricing</HashLink>
-      <HashLink href="#faq" className="block" onClick={() => setMenuOpen(false)}>FAQ</HashLink>
-      <HashLink href="#contact" className="block" onClick={() => setMenuOpen(false)}>Contact</HashLink>
-      <a
-        className="mt-2 inline-flex items-center gap-2 rounded-xl border border-emerald-400 bg-emerald-500/90 text-stone-900 px-4 py-2 text-sm"
-        href="https://wa.me/917087796662"
-        target="_blank"
-        rel="noreferrer"
-        onClick={() => setMenuOpen(false)}
-      >
-        WhatsApp
-      </a>
-    </div>
-  </div>
-)}
 
+      {menuOpen && (
+        <div className="md:hidden border-b border-stone-800 bg-stone-900/95 text-stone-100">
+          <div className="container mx-auto max-w-7xl px-4 py-3 flex flex-col gap-3 text-sm">
+            <HashLink href="#services" className="block" onClick={() => { setMenuOpen(false); trackLink("nav_click", "services_mobile", "#services"); }}>Services</HashLink>
+            <HashLink href="#offers" className="block" onClick={() => { setMenuOpen(false); trackLink("nav_click", "offers_mobile", "#offers"); }}>Offers</HashLink>
+            <HashLink href="#pricing" className="block" onClick={() => { setMenuOpen(false); trackLink("nav_click", "pricing_mobile", "#pricing"); }}>Pricing</HashLink>
+            <HashLink href="#faq" className="block" onClick={() => { setMenuOpen(false); trackLink("nav_click", "faq_mobile", "#faq"); }}>FAQ</HashLink>
+            <HashLink href="#contact" className="block" onClick={() => { setMenuOpen(false); trackLink("nav_click", "contact_mobile", "#contact"); }}>Contact</HashLink>
+            <a
+              className="mt-2 inline-flex items-center gap-2 rounded-xl border border-emerald-400 bg-emerald-500/90 text-stone-900 px-4 py-2 text-sm"
+              href="https://wa.me/917087796662?utm_source=site&utm_medium=cta&utm_campaign=ff_home&utm_content=contact_button"
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => { setMenuOpen(false); trackLink("whatsapp_click", "mobile_menu", "https://wa.me/917087796662"); }}
+            >
+              WhatsApp
+            </a>
+          </div>
+        </div>
+      )}
 
       {/* HERO */}
       <Section className="relative overflow-hidden bg-gradient-to-b from-stone-50 to-stone-100">
@@ -183,8 +193,18 @@ export default function HomeClient() {
             </h1>
             <p className="mt-4 text-lg text-stone-700 max-w-xl">I design, build, and launch crisp websites, ad systems, and WhatsApp funnels—fast. Then we iterate based on data, not vibes.</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild className="rounded-xl bg-emerald-700 hover:bg-emerald-800"><a href="#contact" className="inline-flex items-center gap-2">Book a discovery call <ChevronRight className="w-4 h-4"/></a></Button>
-              <Button variant="outline" asChild className="rounded-xl border-emerald-700 text-emerald-700 hover:bg-emerald-50"><a href="#services">Explore services</a></Button>
+              <Button asChild className="rounded-xl bg-emerald-700 hover:bg-emerald-800">
+                <a
+                  href="#contact"
+                  className="inline-flex items-center gap-2"
+                  onClick={() => trackLink("cta_click", "hero_book_call", "#contact")}
+                >
+                  Book a discovery call <ChevronRight className="w-4 h-4"/>
+                </a>
+              </Button>
+              <Button variant="outline" asChild className="rounded-xl border-emerald-700 text-emerald-700 hover:bg-emerald-50">
+                <a href="#services" onClick={() => trackLink("cta_click", "hero_explore_services", "#services")}>Explore services</a>
+              </Button>
             </div>
             <div className="mt-6 flex items-center gap-4 text-sm text-stone-600">
               <div className="flex items-center gap-2"><Activity className="w-4 h-4"/> Data-first setup</div>
@@ -272,7 +292,6 @@ export default function HomeClient() {
                 <CardHeader className="space-y-2">
                   <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white">{o.icon}</div>
                   <CardTitle>{o.title}</CardTitle>
-
                   <CardDescription>{o.desc}</CardDescription>
                 </CardHeader>
                 <CardContent><List items={o.bullets}/></CardContent>
@@ -330,7 +349,14 @@ export default function HomeClient() {
                   <div className="text-3xl font-semibold text-stone-900">{p.price}<span className="text-base text-stone-500"> / mo</span></div>
                   <List items={p.items}/>
                   <div className="mt-6">
-                    <Button asChild className="w-full rounded-xl bg-stone-900 hover:bg-stone-800"><a href="#contact">Pick {p.name}</a></Button>
+                    <Button asChild className="w-full rounded-xl bg-stone-900 hover:bg-stone-800">
+                      <a
+                        href="#contact"
+                        onClick={() => track("plan_select_click", { plan: p.name })}
+                      >
+                        Pick {p.name}
+                      </a>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -395,12 +421,34 @@ export default function HomeClient() {
               </div>
               <p className="text-stone-700 max-w-prose">Tell me about your business and the outcome you want next month. I’ll reply with a crisp plan and timeline.</p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Button asChild className="rounded-xl bg-emerald-700 hover:bg-emerald-800"><a href="https://cal.com/kanav-guglani/30min" target="_blank" rel="noreferrer" onClick={() => track("cal_cta")}>
-  Schedule on Cal
-</a>
-</Button>
-                <Button variant="outline" asChild className="rounded-xl border-stone-900 text-stone-900 hover:bg-stone-100"><a href="mailto:kanavguglaniofficial@gmail.com">Email me</a></Button>
-                <Button variant="outline" asChild className="rounded-xl border-emerald-700 text-emerald-700 hover:bg-emerald-50"><a href="https://wa.me/917087796662" target="_blank" rel="noreferrer">WhatsApp</a></Button>
+                <Button asChild className="rounded-xl bg-emerald-700 hover:bg-emerald-800">
+                  <a
+                    href="https://cal.com/kanav-guglani/30min?utm_source=site&utm_medium=cta&utm_campaign=ff_home&utm_content=contact_button"
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => trackLink("book_call_click", "contact", "https://cal.com/kanav-guglani/30min")}
+                  >
+                    Schedule on Cal
+                  </a>
+                </Button>
+                <Button variant="outline" asChild className="rounded-xl border-stone-900 text-stone-900 hover:bg-stone-100">
+                  <a
+                    href="mailto:kanavguglaniofficial@gmail.com"
+                    onClick={() => trackLink("email_click", "contact", "mailto:kanavguglaniofficial@gmail.com")}
+                  >
+                    Email me
+                  </a>
+                </Button>
+                <Button variant="outline" asChild className="rounded-xl border-emerald-700 text-emerald-700 hover:bg-emerald-50">
+                  <a
+                   href="https://wa.me/917087796662?utm_source=site&utm_medium=cta&utm_campaign=ff_home&utm_content=mobile_menu"
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => trackLink("whatsapp_click", "contact", "https://wa.me/917087796662")}
+                  >
+                    WhatsApp
+                  </a>
+                </Button>
               </div>
             </div>
             <Card className="rounded-2xl shadow-sm bg-white border border-stone-200">
@@ -409,7 +457,12 @@ export default function HomeClient() {
                 <CardDescription>Get a same-day response.</CardDescription>
               </CardHeader>
               <CardContent>
-                <form className="space-y-4" action="https://formspree.io/f/mkgvopln" method="POST">
+                <form
+                  className="space-y-4"
+                  action="https://formspree.io/f/mkgvopln"
+                  method="POST"
+                  onSubmit={() => track("lead_form_submit", { source: "contact_form" })}
+                >
                   <input type="text" name="_gotcha" className="hidden" tabIndex={-1} autoComplete="off" />
                   <input type="hidden" name="_subject" value="New project enquiry from website" />
                   <Input name="name" placeholder="Your name" required />
@@ -436,11 +489,10 @@ export default function HomeClient() {
             <span className="text-stone-400">© {new Date().getFullYear()}</span>
           </div>
           <div className="flex items-center gap-4 text-sm text-stone-300">
-            <a href="#services" className="hover:text-amber-300">Services</a>
-<a href="#offers" className="hover:text-amber-300">Offers</a>
-
-                        <a href="#pricing" className="hover:text-amber-300">Pricing</a>
-            <a href="#contact" className="hover:text-amber-300">Contact</a>
+            <a href="#services" className="hover:text-amber-300" onClick={() => trackLink("footer_nav_click", "services", "#services")}>Services</a>
+            <a href="#offers" className="hover:text-amber-300" onClick={() => trackLink("footer_nav_click", "offers", "#offers")}>Offers</a>
+            <a href="#pricing" className="hover:text-amber-300" onClick={() => trackLink("footer_nav_click", "pricing", "#pricing")}>Pricing</a>
+            <a href="#contact" className="hover:text-amber-300" onClick={() => trackLink("footer_nav_click", "contact", "#contact")}>Contact</a>
           </div>
         </div>
       </footer>
