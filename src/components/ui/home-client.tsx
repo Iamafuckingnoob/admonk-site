@@ -22,6 +22,7 @@ declare global {
 
 
 /** EARTHY PALETTE (consistent): dark stone + emerald + amber + sand */
+const [menuOpen, setMenuOpen] = useState(false);
 
 const features = [
   { icon: <ShoppingCart className="w-6 h-6"/>, title: "Websites & Shops", points: ["Shopify / Wix / WooCommerce","Razorpay setup & checkout","Shipping & order flows"]},
