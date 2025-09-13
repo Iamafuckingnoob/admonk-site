@@ -148,6 +148,22 @@ export default function HomeClient() {
             >
               <PhoneCall className="w-4 h-4" /> WhatsApp
             </a>
+            {/* Mobile menu button — insert right before the closing </div> of the header container */}
+<button
+  className="md:hidden inline-flex items-center gap-2 rounded-xl border border-stone-700 px-3 py-2"
+  aria-label="Toggle menu"
+  aria-expanded={menuOpen}
+  onClick={() => {
+    setMenuOpen(prev => {
+      const next = !prev;
+      track("menu_toggle", { state: next ? "open" : "close" });
+      return next;
+    });
+  }}
+>
+  Menu
+</button>
+
           </div>
 
           {/* Mobile menu button */}
