@@ -151,17 +151,80 @@ export default function HomeClient() {
           </div>
 
           {/* Mobile menu button */}
-          <button
-            className="md:hidden inline-flex items-center gap-2 rounded-xl border border-stone-700 px-3 py-2"
-            aria-label="Toggle menu"
-            aria-expanded={menuOpen}
-            onClick={() => {
-              setMenuOpen(v => !v);
-              track("menu_toggle", { state: !menuOpen ? "open" : "close" });
-            }}
-          >
-            Menu
-          </button>
+          {menuOpen && (
+  <div className="md:hidden border-b border-stone-800 bg-stone-900/95 text-stone-100">
+    <div className="container mx-auto max-w-7xl px-4 py-3 flex flex-col gap-3 text-sm">
+      <HashLink
+        href="#services"
+        className="block"
+        onClick={() => {
+          setMenuOpen(false);
+          setTimeout(() => trackLink("nav_click", "services_mobile", "#services"), 50);
+        }}
+      >
+        Services
+      </HashLink>
+
+      <HashLink
+        href="#offers"
+        className="block"
+        onClick={() => {
+          setMenuOpen(false);
+          setTimeout(() => trackLink("nav_click", "offers_mobile", "#offers"), 50);
+        }}
+      >
+        Offers
+      </HashLink>
+
+      <HashLink
+        href="#pricing"
+        className="block"
+        onClick={() => {
+          setMenuOpen(false);
+          setTimeout(() => trackLink("nav_click", "pricing_mobile", "#pricing"), 50);
+        }}
+      >
+        Pricing
+      </HashLink>
+
+      <HashLink
+        href="#faq"
+        className="block"
+        onClick={() => {
+          setMenuOpen(false);
+          setTimeout(() => trackLink("nav_click", "faq_mobile", "#faq"), 50);
+        }}
+      >
+        FAQ
+      </HashLink>
+
+      <HashLink
+        href="#contact"
+        className="block"
+        onClick={() => {
+          setMenuOpen(false);
+          setTimeout(() => trackLink("nav_click", "contact_mobile", "#contact"), 50);
+        }}
+      >
+        Contact
+      </HashLink>
+
+      <a
+        className="mt-2 inline-flex items-center gap-2 rounded-xl border border-emerald-400 bg-emerald-500/90 text-stone-900 px-4 py-2 text-sm"
+        href="https://wa.me/917087796662?utm_source=site&utm_medium=cta&utm_campaign=ff_home&utm_content=mobile_menu"
+        target="_blank"
+        rel="noreferrer"
+        onClick={() => {
+          setMenuOpen(false);
+          setTimeout(() => trackLink("whatsapp_click", "mobile_menu", "https://wa.me/917087796662"), 50);
+        }}
+      >
+        WhatsApp
+      </a>
+    </div>
+  </div>
+)}
+
         </div>
       </nav>
 
