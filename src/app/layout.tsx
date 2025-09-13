@@ -11,6 +11,7 @@ import { Analytics } from "../components/ui/analytics";
 
 
 
+
 // ---- Site constants from env (edit .env.local) ----
 
 
@@ -43,46 +44,25 @@ const geistMono = GeistMono;
 // ---- SEO (Next.js Metadata API) ----
 // MERGE: You had two `export const metadata`. This is the single, merged one.
 
-export const metadata: Metadata = {
-  // Use env-aware absolute base (must include scheme)
-  metadataBase: new URL(SITE_URL),
-
-
-  // Keep your preferred title template & copy
-  title: {
-    default: titleDefault,
-    template: `%s — ${siteName}`,
-  },
-  description,
-
-   manifest: "/site.webmanifest",
-  icons: { icon: "/favicon.ico", shortcut: "/favicon.ico", apple: "/favicon.ico" },
-  
-  // Canonical (resolved against metadataBase)
-  alternates: { canonical: "/" },
-
-  // Open Graph
+export const metadata = {
+  title: "Flow & Funnel",
+  description: "Solo-first growth studio",
   openGraph: {
+    title: "Flow & Funnel",
+    description: "Solo-first growth studio",
+    url: "https://admonk-digital-2025.vercel.app",
+    siteName: "Flow & Funnel",
+    images: ["/og.png"],
     type: "website",
-    url: "/", // resolved against metadataBase
-    title: titleDefault,
-    siteName,
-    description,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: siteName }],
-    locale: "en_IN",
   },
-
-  // Twitter
   twitter: {
     card: "summary_large_image",
-    title: titleDefault,
-    description,
+    title: "Flow & Funnel",
+    description: "Solo-first growth studio",
     images: ["/og.png"],
   },
+} as const;
 
-  // Indexing
-  robots: { index: true, follow: true },
-};
 
 // Viewport (you already referenced this type)
 export const viewport: Viewport = {

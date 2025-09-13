@@ -419,6 +419,14 @@ export default function HomeClient() {
       </section>
 
       {/* CONTACT */}
+      {typeof window !== "undefined" && new URLSearchParams(window.location.search).get("sent") === "1" && (
+  <div className="mx-auto max-w-7xl px-4 mt-4">
+    <div className="rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-900 px-4 py-3 text-sm">
+      ✅ Message sent. I’ll get back to you shortly.
+    </div>
+  </div>
+)}
+
       <section id="contact" className="scroll-mt-20">
         <Section className="bg-gradient-to-b from-stone-50 to-white">
           <div className="grid md:grid-cols-2 gap-10 items-start">
@@ -466,6 +474,7 @@ export default function HomeClient() {
               </CardHeader>
               <CardContent>
                 <form
+                
                   className="space-y-4"
                   action="https://formspree.io/f/mkgvopln"
                   method="POST"
@@ -481,6 +490,8 @@ export default function HomeClient() {
                   <p className="text-xs text-stone-500">
                     By submitting, you agree to be contacted about your project. No spam—ever.
                   </p>
+                  <input type="hidden" name="_next" value="https://admonk-digital-2025.vercel.app/?sent=1#contact" />
+
                 </form>
               </CardContent>
             </Card>
