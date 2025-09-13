@@ -246,26 +246,7 @@ export default function HomeClient() {
 </nav>
 
 
-      {menuOpen && (
-        <div className="md:hidden border-b border-stone-800 bg-stone-900/95 text-stone-100">
-          <div className="container mx-auto max-w-7xl px-4 py-3 flex flex-col gap-3 text-sm">
-            <HashLink href="#services" className="block" onClick={() => { setMenuOpen(false); trackLink("nav_click", "services_mobile", "#services"); }}>Services</HashLink>
-            <HashLink href="#offers" className="block" onClick={() => { setMenuOpen(false); trackLink("nav_click", "offers_mobile", "#offers"); }}>Offers</HashLink>
-            <HashLink href="#pricing" className="block" onClick={() => { setMenuOpen(false); trackLink("nav_click", "pricing_mobile", "#pricing"); }}>Pricing</HashLink>
-            <HashLink href="#faq" className="block" onClick={() => { setMenuOpen(false); trackLink("nav_click", "faq_mobile", "#faq"); }}>FAQ</HashLink>
-            <HashLink href="#contact" className="block" onClick={() => { setMenuOpen(false); trackLink("nav_click", "contact_mobile", "#contact"); }}>Contact</HashLink>
-            <a
-              className="mt-2 inline-flex items-center gap-2 rounded-xl border border-emerald-400 bg-emerald-500/90 text-stone-900 px-4 py-2 text-sm"
-              href="https://wa.me/917087796662?utm_source=site&utm_medium=cta&utm_campaign=ff_home&utm_content=mobile_menu"
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => { setMenuOpen(false); trackLink("whatsapp_click", "mobile_menu", "https://wa.me/917087796662"); }}
-            >
-              WhatsApp
-            </a>
-          </div>
-        </div>
-      )}
+    
 
       {/* HERO */}
       <Section className="relative overflow-hidden bg-gradient-to-b from-stone-50 to-stone-100">
