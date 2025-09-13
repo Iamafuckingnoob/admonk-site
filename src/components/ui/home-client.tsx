@@ -20,9 +20,7 @@ declare global {
   }
 }
 
-
 /** EARTHY PALETTE (consistent): dark stone + emerald + amber + sand */
-const [menuOpen, setMenuOpen] = useState(false);
 
 const features = [
   { icon: <ShoppingCart className="w-6 h-6"/>, title: "Websites & Shops", points: ["Shopify / Wix / WooCommerce","Razorpay setup & checkout","Shipping & order flows"]},
@@ -80,7 +78,6 @@ const track = (action: string, params?: Record<string, unknown>) => {
   });
 };
 
-
 const trackLink = (
   name: string,
   label: string,
@@ -91,11 +88,11 @@ const trackLink = (
 };
 
 export default function HomeClient() {
+  // ✅ hooks must be INSIDE the component
   const [menuOpen, setMenuOpen] = useState(false);
-
-  // robust auto-scroll after redirects like /services -> /?section=services
   const searchParams = useSearchParams();
 
+  // robust auto-scroll after redirects like /services -> /?section=services
   useEffect(() => {
     const section = new URLSearchParams(window.location.search).get("section");
     if (!section) return;
@@ -152,7 +149,8 @@ export default function HomeClient() {
               <PhoneCall className="w-4 h-4" /> WhatsApp
             </a>
           </div>
-          {/* Mobile hamburger */}
+
+          {/* Mobile menu button */}
           <button
             className="md:hidden inline-flex items-center gap-2 rounded-xl border border-stone-700 px-3 py-2"
             aria-label="Toggle menu"
@@ -177,7 +175,7 @@ export default function HomeClient() {
             <HashLink href="#contact" className="block" onClick={() => { setMenuOpen(false); trackLink("nav_click", "contact_mobile", "#contact"); }}>Contact</HashLink>
             <a
               className="mt-2 inline-flex items-center gap-2 rounded-xl border border-emerald-400 bg-emerald-500/90 text-stone-900 px-4 py-2 text-sm"
-              href="https://wa.me/917087796662?utm_source=site&utm_medium=cta&utm_campaign=ff_home&utm_content=contact_button"
+              href="https://wa.me/917087796662?utm_source=site&utm_medium=cta&utm_campaign=ff_home&utm_content=mobile_menu"
               target="_blank"
               rel="noreferrer"
               onClick={() => { setMenuOpen(false); trackLink("whatsapp_click", "mobile_menu", "https://wa.me/917087796662"); }}
@@ -296,16 +294,21 @@ export default function HomeClient() {
             <h2 className="text-2xl md:text-3xl font-semibold">Battle-tested offers</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
-            {offers.map((o,idx)=>(
-              <Card key={idx} className="rounded-2xl shadow-sm bg-white border border-stone-200 hover:border-emerald-300">
-                <CardHeader className="space-y-2">
-                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white">{o.icon}</div>
-                  <CardTitle>{o.title}</CardTitle>
-                  <CardDescription>{o.desc}</CardDescription>
-                </CardHeader>
-                <CardContent><List items={o.bullets}/></CardContent>
-              </Card>
-            ))}
+            {offers.map((o, idx) => (
+  <Card key={idx} className="rounded-2xl shadow-sm bg-white border border-stone-200 hover:border-emerald-300">
+    <CardHeader className="space-y-2">
+      <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white">
+        {o.icon}
+      </div>
+      <CardTitle>{o.title}</CardTitle>
+      <CardDescription>{o.desc}</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <List items={o.bullets} />
+    </CardContent>
+  </Card>
+))}
+
           </div>
         </Section>
       </section>
@@ -421,12 +424,12 @@ export default function HomeClient() {
 
       {/* CONTACT */}
       {typeof window !== "undefined" && new URLSearchParams(window.location.search).get("sent") === "1" && (
-  <div className="mx-auto max-w-7xl px-4 mt-4">
-    <div className="rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-900 px-4 py-3 text-sm">
-      ✅ Message sent. I’ll get back to you shortly.
-    </div>
-  </div>
-)}
+        <div className="mx-auto max-w-7xl px-4 mt-4">
+          <div className="rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-900 px-4 py-3 text-sm">
+            ✅ Message sent. I’ll get back to you shortly.
+          </div>
+        </div>
+      )}
 
       <section id="contact" className="scroll-mt-20">
         <Section className="bg-gradient-to-b from-stone-50 to-white">
@@ -458,7 +461,7 @@ export default function HomeClient() {
                 </Button>
                 <Button variant="outline" asChild className="rounded-xl border-emerald-700 text-emerald-700 hover:bg-emerald-50">
                   <a
-                   href="https://wa.me/917087796662?utm_source=site&utm_medium=cta&utm_campaign=ff_home&utm_content=mobile_menu"
+                    href="https://wa.me/917087796662?utm_source=site&utm_medium=cta&utm_campaign=ff_home&utm_content=contact_button"
                     target="_blank"
                     rel="noreferrer"
                     onClick={() => trackLink("whatsapp_click", "contact", "https://wa.me/917087796662")}
@@ -475,7 +478,6 @@ export default function HomeClient() {
               </CardHeader>
               <CardContent>
                 <form
-                
                   className="space-y-4"
                   action="https://formspree.io/f/mkgvopln"
                   method="POST"
@@ -492,7 +494,6 @@ export default function HomeClient() {
                     By submitting, you agree to be contacted about your project. No spam—ever.
                   </p>
                   <input type="hidden" name="_next" value="https://admonk-digital-2025.vercel.app/?sent=1#contact" />
-
                 </form>
               </CardContent>
             </Card>
