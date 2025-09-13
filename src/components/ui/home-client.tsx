@@ -125,124 +125,126 @@ export default function HomeClient() {
 
   return (
     <div className="min-h-screen text-stone-900 bg-[radial-gradient(1200px_600px_at_10%_0%,#fff,rgba(245,245,244,1))]">
-      {/* NAV */}
-      <nav className="sticky top-0 z-30 backdrop-blur border-b border-stone-800 bg-stone-900/95 text-stone-100">
-        <div className="container mx-auto max-w-7xl px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-amber-400 text-stone-900 font-bold">A</span>
-            <span className="font-semibold">Flow & Funnel</span>
-            <Badge>Solo-first growth studio- live</Badge>
-          </div>
-          <div className="hidden md:flex items-center gap-6 text-sm">
-            <HashLink href="#services" onClick={() => trackLink("nav_click", "services", "#services")}>Services</HashLink>
-            <HashLink href="#offers" onClick={() => trackLink("nav_click", "offers", "#offers")}>Offers</HashLink>
-            <HashLink href="#pricing" onClick={() => trackLink("nav_click", "pricing", "#pricing")}>Pricing</HashLink>
-            <HashLink href="#faq" onClick={() => trackLink("nav_click", "faq", "#faq")}>FAQ</HashLink>
-            <HashLink href="#contact" onClick={() => trackLink("nav_click", "contact", "#contact")}>Contact</HashLink>
-            <a
-              className="inline-flex items-center gap-2 rounded-xl border border-emerald-400 bg-emerald-500/90 text-stone-900 px-4 py-2 text-sm"
-              href="https://wa.me/917087796662?utm_source=site&utm_medium=cta&utm_campaign=ff_home&utm_content=nav"
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => trackLink("whatsapp_click", "nav", "https://wa.me/917087796662")}
-            >
-              <PhoneCall className="w-4 h-4" /> WhatsApp
-            </a>
-            {/* Mobile menu button — insert right before the closing </div> of the header container */}
-<button
-  className="md:hidden inline-flex items-center gap-2 rounded-xl border border-stone-700 px-3 py-2"
-  aria-label="Toggle menu"
-  aria-expanded={menuOpen}
-  onClick={() => {
-    setMenuOpen(prev => {
-      const next = !prev;
-      track("menu_toggle", { state: next ? "open" : "close" });
-      return next;
-    });
-  }}
->
-  Menu
-</button>
+     {/* NAV */}
+<nav className="sticky top-0 z-30 backdrop-blur border-b border-stone-800 bg-stone-900/95 text-stone-100">
+  <div className="container mx-auto max-w-7xl px-4 h-16 flex items-center justify-between">
+    <div className="flex items-center gap-2">
+      <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-amber-400 text-stone-900 font-bold">A</span>
+      <span className="font-semibold">Flow & Funnel</span>
+      <Badge>Solo-first growth studio- live</Badge>
+    </div>
 
-          </div>
-
-          {/* Mobile menu button */}
-          {menuOpen && (
-  <div className="md:hidden border-b border-stone-800 bg-stone-900/95 text-stone-100">
-    <div className="container mx-auto max-w-7xl px-4 py-3 flex flex-col gap-3 text-sm">
-      <HashLink
-        href="#services"
-        className="block"
-        onClick={() => {
-          setMenuOpen(false);
-          setTimeout(() => trackLink("nav_click", "services_mobile", "#services"), 50);
-        }}
-      >
-        Services
-      </HashLink>
-
-      <HashLink
-        href="#offers"
-        className="block"
-        onClick={() => {
-          setMenuOpen(false);
-          setTimeout(() => trackLink("nav_click", "offers_mobile", "#offers"), 50);
-        }}
-      >
-        Offers
-      </HashLink>
-
-      <HashLink
-        href="#pricing"
-        className="block"
-        onClick={() => {
-          setMenuOpen(false);
-          setTimeout(() => trackLink("nav_click", "pricing_mobile", "#pricing"), 50);
-        }}
-      >
-        Pricing
-      </HashLink>
-
-      <HashLink
-        href="#faq"
-        className="block"
-        onClick={() => {
-          setMenuOpen(false);
-          setTimeout(() => trackLink("nav_click", "faq_mobile", "#faq"), 50);
-        }}
-      >
-        FAQ
-      </HashLink>
-
-      <HashLink
-        href="#contact"
-        className="block"
-        onClick={() => {
-          setMenuOpen(false);
-          setTimeout(() => trackLink("nav_click", "contact_mobile", "#contact"), 50);
-        }}
-      >
-        Contact
-      </HashLink>
-
+    {/* Desktop links (hidden on mobile) */}
+    <div className="hidden md:flex items-center gap-6 text-sm">
+      <HashLink href="#services" onClick={() => trackLink("nav_click", "services", "#services")}>Services</HashLink>
+      <HashLink href="#offers" onClick={() => trackLink("nav_click", "offers", "#offers")}>Offers</HashLink>
+      <HashLink href="#pricing" onClick={() => trackLink("nav_click", "pricing", "#pricing")}>Pricing</HashLink>
+      <HashLink href="#faq" onClick={() => trackLink("nav_click", "faq", "#faq")}>FAQ</HashLink>
+      <HashLink href="#contact" onClick={() => trackLink("nav_click", "contact", "#contact")}>Contact</HashLink>
       <a
-        className="mt-2 inline-flex items-center gap-2 rounded-xl border border-emerald-400 bg-emerald-500/90 text-stone-900 px-4 py-2 text-sm"
-        href="https://wa.me/917087796662?utm_source=site&utm_medium=cta&utm_campaign=ff_home&utm_content=mobile_menu"
+        className="inline-flex items-center gap-2 rounded-xl border border-emerald-400 bg-emerald-500/90 text-stone-900 px-4 py-2 text-sm"
+        href="https://wa.me/917087796662?utm_source=site&utm_medium=cta&utm_campaign=ff_home&utm_content=nav"
         target="_blank"
         rel="noreferrer"
-        onClick={() => {
-          setMenuOpen(false);
-          setTimeout(() => trackLink("whatsapp_click", "mobile_menu", "https://wa.me/917087796662"), 50);
-        }}
+        onClick={() => trackLink("whatsapp_click", "nav", "https://wa.me/917087796662")}
       >
-        WhatsApp
+        <PhoneCall className="w-4 h-4" /> WhatsApp
       </a>
     </div>
-  </div>
-)}
 
-        </div>
-      </nav>
+    {/* Mobile menu button (VISIBLE on mobile) */}
+    <button
+      className="md:hidden inline-flex items-center gap-2 rounded-xl border border-stone-700 px-3 py-2"
+      aria-label="Toggle menu"
+      aria-expanded={menuOpen}
+      onClick={() => {
+        setMenuOpen(prev => {
+          const next = !prev;
+          track("menu_toggle", { state: next ? "open" : "close" });
+          return next;
+        });
+      }}
+    >
+      Menu
+    </button>
+  </div>
+
+  {/* Mobile menu (renders below header row) */}
+  {menuOpen && (
+    <div className="md:hidden border-b border-stone-800 bg-stone-900/95 text-stone-100">
+      <div className="container mx-auto max-w-7xl px-4 py-3 flex flex-col gap-3 text-sm">
+        <HashLink
+          href="#services"
+          className="block"
+          onClick={() => {
+            setMenuOpen(false);
+            setTimeout(() => trackLink("nav_click", "services_mobile", "#services"), 50);
+          }}
+        >
+          Services
+        </HashLink>
+
+        <HashLink
+          href="#offers"
+          className="block"
+          onClick={() => {
+            setMenuOpen(false);
+            setTimeout(() => trackLink("nav_click", "offers_mobile", "#offers"), 50);
+          }}
+        >
+          Offers
+        </HashLink>
+
+        <HashLink
+          href="#pricing"
+          className="block"
+          onClick={() => {
+            setMenuOpen(false);
+            setTimeout(() => trackLink("nav_click", "pricing_mobile", "#pricing"), 50);
+          }}
+        >
+          Pricing
+        </HashLink>
+
+        <HashLink
+          href="#faq"
+          className="block"
+          onClick={() => {
+            setMenuOpen(false);
+            setTimeout(() => trackLink("nav_click", "faq_mobile", "#faq"), 50);
+          }}
+        >
+          FAQ
+        </HashLink>
+
+        <HashLink
+          href="#contact"
+          className="block"
+          onClick={() => {
+            setMenuOpen(false);
+            setTimeout(() => trackLink("nav_click", "contact_mobile", "#contact"), 50);
+          }}
+        >
+          Contact
+        </HashLink>
+
+        <a
+          className="mt-2 inline-flex items-center gap-2 rounded-xl border border-emerald-400 bg-emerald-500/90 text-stone-900 px-4 py-2 text-sm"
+          href="https://wa.me/917087796662?utm_source=site&utm_medium=cta&utm_campaign=ff_home&utm_content=mobile_menu"
+          target="_blank"
+          rel="noreferrer"
+          onClick={() => {
+            setMenuOpen(false);
+            setTimeout(() => trackLink("whatsapp_click", "mobile_menu", "https://wa.me/917087796662"), 50);
+          }}
+        >
+          WhatsApp
+        </a>
+      </div>
+    </div>
+  )}
+</nav>
+
 
       {menuOpen && (
         <div className="md:hidden border-b border-stone-800 bg-stone-900/95 text-stone-100">
